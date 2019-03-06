@@ -12,8 +12,16 @@ import Foundation
 public struct Duration:Codable {
     public var timeInterval:TimeInterval
     
-    static var calendar:Calendar = Calendar.current
-    static var timeZone:TimeZone = TimeZone.current
+    static var calendar:Calendar = Calendar.current {
+        didSet {
+            calendar.timeZone = timeZone
+        }
+    }
+    static var timeZone:TimeZone = TimeZone.current {
+        didSet {
+            calendar.timeZone = timeZone
+        }
+    }
     
     private let dateComponents:DateComponents
     
