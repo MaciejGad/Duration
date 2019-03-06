@@ -11,6 +11,7 @@
 		D916E250222F0B5B00F191EB /* DurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D916E24F222F0B5B00F191EB /* DurationTests.swift */; };
 		D916E252222F0B5B00F191EB /* Duration.h in Headers */ = {isa = PBXBuildFile; fileRef = D916E244222F0B5B00F191EB /* Duration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D916E25C222F0B6B00F191EB /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D916E25B222F0B6B00F191EB /* Duration.swift */; };
+		D916E25E222FE4CE00F191EB /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = D916E25D222FE4CE00F191EB /* Component.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		D916E24F222F0B5B00F191EB /* DurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationTests.swift; sourceTree = "<group>"; };
 		D916E251222F0B5B00F191EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D916E25B222F0B6B00F191EB /* Duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
+		D916E25D222FE4CE00F191EB /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 			children = (
 				D916E244222F0B5B00F191EB /* Duration.h */,
 				D916E25B222F0B6B00F191EB /* Duration.swift */,
+				D916E25D222FE4CE00F191EB /* Component.swift */,
 				D916E245222F0B5B00F191EB /* Info.plist */,
 			);
 			path = Duration;
@@ -199,6 +202,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D916E25C222F0B6B00F191EB /* Duration.swift in Sources */,
+				D916E25E222FE4CE00F191EB /* Component.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

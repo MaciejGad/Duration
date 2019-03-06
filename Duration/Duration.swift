@@ -10,7 +10,13 @@ import Foundation
 
 
 public struct Duration:Codable {
-    public let timeInterval:TimeInterval
+    public var timeInterval:TimeInterval
+    
+    static var calendar:Calendar = Calendar.current
+    static var timeZone:TimeZone = TimeZone.current
+    
+    private let dateComponents:DateComponents
+    
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -23,11 +29,23 @@ public struct Duration:Codable {
         let numbers = Set("0123456789.,")
         var isTimePart = false
         
-        func addTimeInterval(base:TimeInterval) {
-            if let value = Double(numberValue.replacingOccurrences(of: ",", with: ".")) {
-                timeInterval += value * base
+        var dateComponents = DateComponents(calendar: Duration.calendar, timeZone: Duration.timeZone, era: nil, year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
+        
+        func addTimeInterval(base:Component) {
+            guard let value = Double(numberValue.replacingOccurrences(of: ",", with: ".")) else {
+                numberValue = ""
+                return
             }
+            timeInterval += value * base.timeInterval()
             numberValue = ""
+            
+            let components = base.value(duration: value)
+            for component in components {
+                var currentValue = dateComponents.value(for: component.component) ?? 0
+                currentValue += component.duration
+                dateComponents.setValue(currentValue, for: component.component)
+            }
+            
         }
         
         for char in textValue {
@@ -46,7 +64,7 @@ public struct Duration:Codable {
                 if isTimePart {
                     addTimeInterval(base: .minute)
                 } else {
-                    addTimeInterval(base: .day * 30)
+                    addTimeInterval(base: .month)
                 }
             case "W":
                 addTimeInterval(base: .week)
@@ -58,7 +76,7 @@ public struct Duration:Codable {
                 }
             case "S":
                 if isTimePart {
-                    addTimeInterval(base: 1)
+                    addTimeInterval(base: .second)
                 } else {
                     throw Errors.timePartNotBeginWithT
                 }
@@ -70,6 +88,40 @@ public struct Duration:Codable {
             throw Errors.discontinuous
         }
         self.timeInterval = timeInterval
+        self.dateComponents = dateComponents
+    }
+    
+    func timeIntervalFrom(date:Date) -> TimeInterval {
+        return endDate(starting: date).timeIntervalSince(date)
+        
+    }
+    
+    func endDate(starting date:Date) -> Date {
+        guard let endDate = Duration.calendar.date(byAdding: dateComponents, to: date) else {
+            return date.addingTimeInterval(timeInterval)
+        }
+        //print(endDate.timeIntervalSince1970)
+        return endDate
+    }
+    
+    func timeIntervalFromNow() -> TimeInterval {
+        return timeIntervalFrom(date: Date())
+    }
+    
+    func timeIntervalTo(date:Date) -> TimeInterval {
+        return date.timeIntervalSince(startDate(ending: date))
+    }
+    
+    func startDate(ending date:Date) -> Date {
+        guard let startDate = Duration.calendar.date(byAdding: dateComponents.reverse(), to: date) else {
+            return date.addingTimeInterval(-timeInterval)
+        }
+//        print(startDate.timeIntervalSince1970)
+        return startDate
+    }
+    
+    func timeIntervalToNow() -> TimeInterval {
+        return timeIntervalTo(date: Date())
     }
     
     enum Errors:Error {
@@ -81,10 +133,9 @@ public struct Duration:Codable {
     }
 }
 
-extension TimeInterval {
-    static let minute = 60.0
-    static let hour = 60 * TimeInterval.minute
-    static let day = 24 * TimeInterval.hour
-    static let week = 7 * TimeInterval.day
-    static let year = 365.25 * TimeInterval.day
+extension DateComponents {
+    func reverse() -> DateComponents {
+        return DateComponents(calendar: self.calendar, timeZone: self.timeZone, era: nil, year: -(self.year ?? 0), month: -(self.month ?? 0), day:  -(self.day ?? 0), hour: -(self.hour ?? 0), minute:  -(self.minute ?? 0), second: -(self.second ?? 0), nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
+    }
 }
+
