@@ -12,12 +12,12 @@ import Foundation
 public struct Duration:Codable {
     public var timeInterval:TimeInterval
     
-    static var calendar:Calendar = Calendar.current {
+    public static var calendar:Calendar = Calendar.current {
         didSet {
             calendar.timeZone = timeZone
         }
     }
-    static var timeZone:TimeZone = TimeZone.current {
+    public static var timeZone:TimeZone = TimeZone.current {
         didSet {
             calendar.timeZone = timeZone
         }
@@ -99,40 +99,38 @@ public struct Duration:Codable {
         self.dateComponents = dateComponents
     }
     
-    func timeIntervalFrom(date:Date) -> TimeInterval {
+    public func timeIntervalFrom(date:Date) -> TimeInterval {
         return endDate(starting: date).timeIntervalSince(date)
         
     }
     
-    func endDate(starting date:Date) -> Date {
+    public func endDate(starting date:Date) -> Date {
         guard let endDate = Duration.calendar.date(byAdding: dateComponents, to: date) else {
             return date.addingTimeInterval(timeInterval)
         }
-        //print(endDate.timeIntervalSince1970)
         return endDate
     }
     
-    func timeIntervalFromNow() -> TimeInterval {
+    public func timeIntervalFromNow() -> TimeInterval {
         return timeIntervalFrom(date: Date())
     }
     
-    func timeIntervalTo(date:Date) -> TimeInterval {
+    public func timeIntervalTo(date:Date) -> TimeInterval {
         return date.timeIntervalSince(startDate(ending: date))
     }
     
-    func startDate(ending date:Date) -> Date {
+    public func startDate(ending date:Date) -> Date {
         guard let startDate = Duration.calendar.date(byAdding: dateComponents.reverse(), to: date) else {
             return date.addingTimeInterval(-timeInterval)
         }
-//        print(startDate.timeIntervalSince1970)
         return startDate
     }
     
-    func timeIntervalToNow() -> TimeInterval {
+    public func timeIntervalToNow() -> TimeInterval {
         return timeIntervalTo(date: Date())
     }
     
-    enum Errors:Error {
+    public enum Errors:Error {
         case notBeginWithP
         case timePartNotBeginWithT
         case unknownElement
