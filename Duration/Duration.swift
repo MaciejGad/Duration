@@ -9,29 +9,30 @@
 import Foundation
 
 
-public struct Duration:Codable {
-    public var timeInterval:TimeInterval
-    
-    public static var calendar:Calendar = Calendar.current {
+public struct Duration: Codable {
+
+    public var timeInterval: TimeInterval
+
+    public static var calendar: Calendar = Calendar.current {
         didSet {
             calendar.timeZone = timeZone
         }
     }
-    public static var timeZone:TimeZone = TimeZone.current {
+
+    public static var timeZone: TimeZone = TimeZone.current {
         didSet {
             calendar.timeZone = timeZone
         }
     }
-    
-    private let dateComponents:DateComponents
-    
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let textValue = try container.decode(String.self)
-        guard textValue.hasPrefix("P") else {
+
+    private let dateComponents: DateComponents
+    private let originalValue: String
+
+    public init(string value: String) throws {
+        guard value.hasPrefix("P") else {
             throw Errors.notBeginWithP
         }
+        originalValue = value
         var timeInterval:TimeInterval = 0
         var numberValue:String = ""
         let numbers = Set("0123456789.,")
@@ -56,7 +57,7 @@ public struct Duration:Codable {
             
         }
         
-        for char in textValue {
+        for char in value {
             switch char {
             case "P":
                 continue
@@ -99,6 +100,17 @@ public struct Duration:Codable {
         self.dateComponents = dateComponents
     }
     
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        try self.init(string: value)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(originalValue)
+    }
+    
     public func timeIntervalFrom(date:Date) -> TimeInterval {
         return endDate(starting: date).timeIntervalSince(date)
         
@@ -136,6 +148,12 @@ public struct Duration:Codable {
         case unknownElement
         case discontinuous
 
+    }
+}
+
+extension Duration: CustomStringConvertible {
+    public var description: String {
+        return "Duration(\(originalValue))"
     }
 }
 
