@@ -5,7 +5,17 @@ This micro-framework should help with handling duration written using the ISO 86
 
 
 # Usage 
-We will assume that you have a JSON like this:
+
+Usage is very simple, you can use `Duration(string: String)`:
+
+```swift
+import ISO8601Duration
+
+let duration = Duration(string: "P3Y6M4DT12H30M5S")
+print(duration.timeInterval) //110615405.0
+```
+
+Or you can decode from JSON like this:
 
 ```json
 {
