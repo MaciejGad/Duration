@@ -10,7 +10,8 @@ This micro-framework should help with handling duration written using the ISO 86
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author             = { "Maciej Gad" => "https://github.com/MaciejGad" }
   s.social_media_url   = "https://twitter.com/maciej_gad"
-  s.platform     = :ios, "10.0"
+  s.ios.deployment_target = "10.0"
+  s.tvos.deployment_target = "10.0"
   s.source       = { :git => "https://github.com/MaciejGad/Duration.git", :tag => 'v1.3' }
   s.source_files  =  "Duration/*.swift"
   s.swift_version = "4.2"
