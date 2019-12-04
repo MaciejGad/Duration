@@ -258,7 +258,7 @@ class DurationTests: XCTestCase {
             "duration": "P1Y1D"
         }
         """.utf8
-        let data = Data(bytes: json)
+        let data = Data(json)
         let decoder = JSONDecoder()
         
         //when
