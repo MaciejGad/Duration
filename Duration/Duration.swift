@@ -26,7 +26,7 @@ public struct Duration: Codable {
     }
 
     private let dateComponents: DateComponents
-    private let originalValue: String
+    public let originalValue: String
 
     public init(string value: String) throws {
         guard value.hasPrefix("P") else {
